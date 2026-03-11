@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arkenmont — Rise Without Limits</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f5f0;
+      --walnut: #7B4F2E;
+      --walnut-light: #9B6642;
+      --walnut-dark: #5C3820;
+      --gray: #888880;
+      --light-gray: #e8e8e3;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      width: 8px; height: 8px;
+      background: var(--walnut);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 99999;
+      transition: transform 0.15s ease;
+    }
+    .cursor-ring {
+      width: 32px; height: 32px;
+      border: 1px solid var(--walnut);
+      border-radius: 50%;
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 99998;
+      transition: transform 0.08s ease, width 0.2s, height 0.2s, opacity 0.2s;
+      opacity: 0.5;
+    }
+
+    /* ═══ HEADER ═══ */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 70px;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      z-index: 1000;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .header-logo {
+      width: 36px;
+      height: 36px;
+    }
+
+    .header-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--white);
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 1.5px;
+      background: var(--white);
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+    /* ═══ SIDE PANEL ═══ */
+    .side-panel {
+      position: fixed;
+      top: 0; right: -420px;
+      width: 420px;
+      height: 100vh;
+      background: rgba(10, 10, 10, 0.96);
+      backdrop-filter: blur(20px);
+      z-index: 999;
+      transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+      border-left: 1px solid rgba(123, 79, 46, 0.3);
+    }
+
+    .side-panel.open { right: 0; }
+
+    .side-panel nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .side-panel nav a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: rgba(245, 245, 240, 0.4);
+      text-decoration: none;
+      letter-spacing: 2px;
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: block;
+      padding: 8px 0;
+    }
+
+    .side-panel nav a:hover {
+      color: var(--white);
+      transform: translateX(12px);
+    }
+
+    .side-panel-footer {
+      position: absolute;
+      bottom: 48px;
+      left: 60px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(245, 245, 240, 0.2);
+      text-transform: uppercase;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .overlay.active { opacity: 1; pointer-events: all; }
+
+    /* ═══ HERO ═══ */
+    #home {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 70px;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px 80px 80px;
+      background: var(--white);
+    }
+
+    .hero-label {
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--black);
+      margin-bottom: 40px;
+      letter-spacing: -1px;
+    }
+
+    .hero-title span {
+      font-style: italic;
+      color: var(--walnut);
+    }
+
+    .hero-desc {
+      font-size: 14px;
+      line-height: 1.9;
+      color: #555550;
+      max-width: 420px;
+      margin-bottom: 56px;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-walnut {
+      display: inline-block;
+      background: var(--walnut);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 18px 48px;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.3s ease;
+      align-self: flex-start;
+    }
+
+    .btn-walnut:hover {
+      background: var(--walnut-dark);
+      transform: translateY(-2px);
+    }
+
+    .hero-image {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 8s ease;
+    }
+
+    .hero-image:hover img { transform: scale(1.04); }
+
+    .hero-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(245,245,240,0.15) 0%, transparent 40%);
+    }
+
+    .scroll-indicator {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--walnut);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { width: 40px; opacity: 1; }
+      50% { width: 60px; opacity: 0.5; }
+    }
+
+    .scroll-text {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--gray);
+      text-transform: uppercase;
+    }
+
+    /* ═══ ABOUT ═══ */
+    #about {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .about-image {
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .about-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, rgba(245,245,240,0.1) 100%);
+    }
+
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 100px 80px 100px 64px;
+      background: var(--white);
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 32px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title span { font-style: italic; color: var(--walnut); }
+
+    .section-body {
+      font-size: 14px;
+      line-height: 1.9;
+      color: #555550;
+      font-weight: 300;
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+
+    .tagline-block {
+      border-left: 2px solid var(--walnut);
+      padding-left: 24px;
+      margin: 40px 0;
+    }
+
+    .tagline-block p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--black);
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+    }
+
+    /* ARKENMONT Animation */
+    .arkenmont-animation {
+      background: var(--black);
+      padding: 100px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 500px;
+    }
+
+    .ark-label {
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: rgba(123,79,46,0.7);
+      text-transform: uppercase;
+      margin-bottom: 60px;
+      font-weight: 500;
+    }
+
+    .ark-display {
+      text-align: center;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ark-letter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 120px;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      letter-spacing: -2px;
+    }
+
+    .ark-letter.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ark-meaning {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.3s;
+      font-weight: 400;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .ark-meaning.visible { opacity: 1; }
+
+    .ark-progress {
+      display: flex;
+      gap: 8px;
+      margin-top: 60px;
+    }
+
+    .ark-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(245,245,240,0.2);
+      transition: background 0.3s ease;
+    }
+
+    .ark-dot.active { background: var(--walnut); }
+
+    /* ═══ WHY ARKENMONT ═══ */
+    #why {
+      position: relative;
+      padding: 120px 80px;
+      overflow: hidden;
+    }
+
+    .why-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1527049979667-990f1d0d8e7f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.25);
+    }
+
+    .why-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .why-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .why-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .why-title span { font-style: italic; color: var(--walnut); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: rgba(123,79,46,0.2);
+    }
+
+    .why-item {
+      background: rgba(10,10,10,0.85);
+      padding: 48px;
+      transition: background 0.3s ease;
+    }
+
+    .why-item:hover { background: rgba(20,12,8,0.95); }
+
+    .why-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 300;
+      color: rgba(123,79,46,0.3);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .why-point-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .why-point-body {
+      font-size: 13px;
+      line-height: 1.8;
+      color: rgba(245,245,240,0.5);
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+
+    .why-item-last {
+      grid-column: 1 / -1;
+    }
+
+    /* ═══ SERVICES ═══ */
+    #services {
+      padding: 120px 80px;
+      background: var(--white);
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--light-gray);
+      margin-bottom: 2px;
+    }
+
+    .services-grid-bottom {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      background: var(--light-gray);
+    }
+
+    .service-card {
+      background: var(--white);
+      padding: 48px 40px;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .service-card:hover { background: #faf9f6; }
+
+    .service-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--light-gray);
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .service-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--black);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+
+    .service-tagline {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .service-desc {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #777770;
+      font-weight: 300;
+      margin-bottom: 32px;
+    }
+
+    .service-includes {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .service-includes li {
+      font-size: 12px;
+      color: #666660;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--light-gray);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 300;
+    }
+
+    .service-includes li::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: var(--walnut);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .service-pricing {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--black);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .service-benefit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      transition: gap 0.3s ease;
+    }
+
+    .service-benefit-btn:hover { gap: 14px; }
+    .service-benefit-btn::after { content: '→'; }
+
+    /* Benefits Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 40px;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--white);
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 64px;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute;
+      top: 24px; right: 24px;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--gray);
+      border: none;
+      background: none;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--black); }
+
+    .modal-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--black);
+      margin-bottom: 40px;
+      line-height: 1.2;
+    }
+
+    .benefit-item {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .benefit-item:last-child { border-bottom: none; }
+
+    .benefit-service {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .benefit-desc {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #555550;
+      font-weight: 300;
+    }
+
+    .services-enquiry {
+      text-align: center;
+      padding: 80px 0 0;
+    }
+
+    .enquiry-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--black);
+      margin-bottom: 8px;
+    }
+
+    .enquiry-sub {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--gray);
+      margin-bottom: 40px;
+    }
+
+    /* Enquiry Modal */
+    .enquiry-form { display: flex; flex-direction: column; gap: 20px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+    .form-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      border: none;
+      border-bottom: 1px solid var(--light-gray);
+      padding: 12px 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      color: var(--black);
+      background: transparent;
+      outline: none;
+      transition: border-color 0.3s;
+      font-weight: 300;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--walnut);
+    }
+
+    .form-textarea { resize: vertical; min-height: 100px; }
+
+    .form-select { cursor: pointer; }
+
+    .form-submit {
+      background: var(--walnut);
+      color: var(--white);
+      border: none;
+      padding: 18px 48px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+
+    .form-submit:hover { background: var(--walnut-dark); }
+
+    /* ═══ ARKENMONT CIRCLE ═══ */
+    #circle {
+      background: var(--black);
+      padding: 120px 80px;
+    }
+
+    .circle-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .circle-label {
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--walnut);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .circle-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .circle-title span { font-style: italic; color: var(--walnut); }
+
+    .circle-desc {
+      font-size: 14px;
+      line-height: 1.9;
+      color: rgba(245,245,240,0.5);
+      font-weight: 300;
+      margin-bottom: 64px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .circle-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px 40px;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .circle-form-full { grid-column: 1 / -1; }
+
+    .circle-field { display: flex; flex-direction: column; gap: 8px; }
+
+    .circle-label-field {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(245,245,240,0.3);
+      font-weight: 500;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .required-badge {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: var(--walnut);
+      text-transform: uppercase;
+    }
+
+    .optional-badge {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: rgba(245,245,240,0.2);
+      text-transform: uppercase;
+    }
+
+    .circle-input {
+      border: none;
+      border-bottom: 1px solid rgba(245,245,240,0.1);
+      padding: 12px 0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      color: var(--white);
+      background: transparent;
+      outline: none;
+      transition: border-color 0.3s;
+      font-weight: 300;
+    }
+
+    .circle-input:focus { border-color: var(--walnut); }
+    .circle-input::placeholder { color: rgba(245,245,240,0.2); }
+
+    .circle-submit-wrap { text-align: center; }
+
+    /* ═══ CONTACT (in side panel only) ═══ */
+    .contact-info {
+      display: none;
+    }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background: var(--black);
+      padding: 60px 80px;
+      border-top: 1px solid rgba(123,79,46,0.2);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .footer-logo { width: 28px; height: 28px; }
+
+    .footer-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--white);
+    }
+
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: rgba(245,245,240,0.3);
+      letter-spacing: 1px;
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    .footer-email {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: rgba(245,245,240,0.4);
+      margin-bottom: 8px;
+    }
+
+    .footer-copy {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(245,245,240,0.2);
+    }
+
+    /* ═══ CHAT WIDGET ═══ */
+    .chat-widget {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 500;
+    }
+
+    .chat-bubble {
+      background: var(--black);
+      color: var(--white);
+      padding: 14px 20px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(123,79,46,0.4);
+      transition: border-color 0.3s;
+      font-weight: 500;
+    }
+
+    .chat-bubble:hover { border-color: var(--walnut); }
+
+    .chat-dot {
+      width: 6px; height: 6px;
+      background: var(--walnut);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .chat-panel {
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      width: 340px;
+      background: var(--white);
+      border: 1px solid var(--light-gray);
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    .chat-panel.open { display: flex; }
+
+    .chat-header {
+      background: var(--black);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-header-title {
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .chat-close {
+      color: rgba(245,245,240,0.5);
+      cursor: pointer;
+      font-size: 18px;
+      border: none;
+      background: none;
+      transition: color 0.2s;
+    }
+    .chat-close:hover { color: var(--white); }
+
+    .chat-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .chat-message {
+      font-size: 12px;
+      line-height: 1.7;
+      color: #555550;
+      font-weight: 300;
+      background: #f8f7f4;
+      padding: 12px 16px;
+      max-width: 85%;
+    }
+
+    .chat-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 24px 24px;
+    }
+
+    .chat-option {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--black);
+      padding: 12px 16px;
+      border: 1px solid var(--light-gray);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-weight: 500;
+      text-align: left;
+      background: none;
+    }
+
+    .chat-option:hover {
+      border-color: var(--walnut);
+      background: #faf9f6;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      #home, #about { grid-template-columns: 1fr; }
+      .hero-image, .about-image { min-height: 400px; order: -1; }
+      .hero-content, .about-content { padding: 60px 32px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .services-grid-bottom { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      .why-item-last { grid-column: auto; }
+      .circle-form { grid-template-columns: 1fr; }
+      .circle-form-full { grid-column: auto; }
+      header { padding: 0 24px; }
+      #services, #circle, #why { padding: 80px 32px; }
+      footer { padding: 48px 32px; }
+      .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
+      .footer-right { text-align: center; }
+      .side-panel { width: 100%; right: -100%; }
+      .hero-title { font-size: 48px; }
+      .section-title { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Header -->
+  <header>
+    <a href="#home" class="header-brand">
+      <!-- Arkenmont Icon SVG -->
+      <svg class="header-logo" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="30,4 50,4 60,22 50,40 30,40 20,22" fill="none" stroke="rgba(123,79,46,0.5)" stroke-width="1"/>
+        <polygon points="18,10 30,10 38,28 32,28" fill="url(#vg1)"/>
+        <polygon points="42,10 30,10 22,28 28,28" fill="url(#vg1)"/>
+        <polygon points="26,28 34,28 30,36" fill="none"/>
+        <rect x="20" y="42" width="20" height="2" fill="#7B4F2E" opacity="0.6"/>
+        <defs>
+          <linearGradient id="vg1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#cccccc;stop-opacity:1"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="header-name">ARKENMONT</span>
+    </a>
+    <div class="hamburger" id="hamburger" onclick="togglePanel()">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- Side Panel -->
+  <div class="overlay" id="overlay" onclick="togglePanel()"></div>
+  <div class="side-panel" id="sidePanel">
+    <nav>
+      <a href="#home" onclick="togglePanel()">Home</a>
+      <a href="#about" onclick="togglePanel()">About Us</a>
+      <a href="#services" onclick="togglePanel()">Services</a>
+      <a href="#contact-panel" onclick="showContact(); togglePanel();">Contact Us</a>
+      <a href="#circle" onclick="togglePanel()">Arkenmont Circle</a>
+    </nav>
+    <div id="contact-panel" style="display:none; margin-top:40px;">
+      <p style="font-size:11px;letter-spacing:3px;color:rgba(245,245,240,0.3);text-transform:uppercase;margin-bottom:12px;">Contact Us</p>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(245,245,240,0.8);margin-bottom:8px;">hello@arkenmont.co</p>
+      <p style="font-size:12px;color:rgba(245,245,240,0.3);font-style:italic;">We would love to assist you.</p>
+    </div>
+    <div class="side-panel-footer">Arkenmont — Rise Without Limits</div>
+  </div>
+
+  <!-- Hero -->
+  <section id="home">
+    <div class="hero-content">
+      <p class="hero-label">Global Business Growth Firm</p>
+      <h1 class="hero-title">Rise<br/><span>Without</span><br/>Limits.</h1>
+      <p class="hero-desc">Arkenmont is a global business growth firm. We don't just advise. We build, execute and deliver — for businesses that refuse to settle for average.</p>
+      <a href="#services" class="btn-walnut">Get Started</a>
+      <div class="scroll-indicator">
+        <div class="scroll-line"></div>
+        <span class="scroll-text">Scroll to explore</span>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1771270759486-1f7703945072?q=80&w=1400&auto=format&fit=crop" alt="Arkenmont — Premium Office"/>
+      <div class="hero-image-overlay"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="about-image">
+      <img src="https://images.unsplash.com/photo-1513563326940-e76e4641069e?q=80&w=1400&auto=format&fit=crop" alt="Arkenmont — Global Reach"/>
+      <div class="about-image-overlay"></div>
+    </div>
+    <div class="about-content reveal">
+      <p class="section-label">Who We Are</p>
+      <h2 class="section-title">Built for<br/>businesses that<br/><span>demand more.</span></h2>
+      <p class="section-body">Arkenmont is not an agency. We are an institution — a full-service business growth firm delivering integrated systems across automation, marketing, advertising, sales and strategy.</p>
+      <p class="section-body">We serve mid-scale and global companies, from ambitious regional businesses to internationally recognised brands. Our approach is rooted in precision, powered by execution, and measured entirely by results.</p>
+      <div class="tagline-block">
+        <p>Rise Without Limits.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARKENMONT Animation -->
+  <div class="arkenmont-animation">
+    <p class="ark-label">The Philosophy Behind the Name</p>
+    <div class="ark-display">
+      <div class="ark-letter" id="arkLetter">A</div>
+      <div class="ark-meaning" id="arkMeaning">Ambition that transforms businesses into market leaders</div>
+    </div>
+    <div class="ark-progress" id="arkProgress"></div>
+  </div>
+
+  <!-- Why Arkenmont -->
+  <section id="why">
+    <div class="why-bg"></div>
+    <div class="why-content">
+      <div class="why-header reveal">
+        <p class="section-label" style="color:rgba(123,79,46,0.8);text-align:center;">Why Choose Us</p>
+        <h2 class="why-title">Why <span>Arkenmont</span></h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-item reveal">
+          <div class="why-number">01</div>
+          <div class="why-point-title">Execution matters.</div>
+          <div class="why-point-body">Strategy alone changes nothing. Arkenmont delivers strategy and execution — simultaneously, without compromise.</div>
+        </div>
+        <div class="why-item reveal">
+          <div class="why-number">02</div>
+          <div class="why-point-title">Proof over promises.</div>
+          <div class="why-point-body">Every system, campaign, and decision is measured. Results determine everything. We have no interest in anything less.</div>
+        </div>
+        <div class="why-item reveal">
+          <div class="why-number">03</div>
+          <div class="why-point-title">Nine principles. One standard.</div>
+          <div class="why-point-body">Ambition. Results. Knowledge. Excellence. Network. Mastery. Optimization. Navigation. Trust. These principles guide every engagement.</div>
+        </div>
+        <div class="why-item reveal">
+          <div class="why-number">04</div>
+          <div class="why-point-title">Built to grow with you.</div>
+          <div class="why-point-body">Clients begin where they are comfortable. As results compound, so does the partnership. No pressure — just performance.</div>
+        </div>
+        <div class="why-item why-item-last reveal">
+          <div class="why-number">05</div>
+          <div class="why-point-title">Partnership, not service.</div>
+          <div class="why-point-body">At Arkenmont, every client relationship is treated as long-term. Your growth becomes our responsibility. A service can be replaced. A partner cannot.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="services-header reveal">
+      <p class="section-label">What We Deliver</p>
+      <h2 class="section-title">Our <span>Packages</span></h2>
+    </div>
+
+    <div class="services-grid">
+      <!-- Package 1 -->
+      <div class="service-card reveal">
+        <div class="service-number">01</div>
+        <div class="service-name">Arkenmont Foundation</div>
+        <div class="service-tagline">Automation Infrastructure</div>
+        <div class="service-desc">A fully automated lead acquisition engine. Every social interaction captured, organised and moved into a structured pipeline without manual intervention.</div>
+        <ul class="service-includes">
+          <li>DM automation across all platforms</li>
+          <li>Comment to DM automation flows</li>
+          <li>CRM integration and lead database</li>
+          <li>Customer journey automation</li>
+          <li>Chatbot design and deployment</li>
+        </ul>
+        <div class="service-pricing">Setup ₹90,000 · Monthly ₹25,000</div>
+        <button class="service-benefit-btn" onclick="openModal('foundation')">How does this help me?</button>
+      </div>
+
+      <!-- Package 2 -->
+      <div class="service-card reveal">
+        <div class="service-number">02</div>
+        <div class="service-name">Arkenmont Expansion</div>
+        <div class="service-tagline">Brand Growth & Marketing</div>
+        <div class="service-desc">Professional marketing assets deployed effectively. Studio network connections, campaign management, and strategic advertising across digital and offline channels.</div>
+        <ul class="service-includes">
+          <li>Nationwide partner studio network</li>
+          <li>Ad production and editing</li>
+          <li>Campaign management and optimization</li>
+          <li>Billboard and outdoor advertising</li>
+          <li>Business improvement guidance</li>
+        </ul>
+        <div class="service-pricing">Setup ₹2,00,000 · Monthly ₹58,000</div>
+        <button class="service-benefit-btn" onclick="openModal('expansion')">How does this help me?</button>
+      </div>
+
+      <!-- Package 3 -->
+      <div class="service-card reveal">
+        <div class="service-number">03</div>
+        <div class="service-name">Arkenmont Revenue</div>
+        <div class="service-tagline">Customer Acquisition & Revenue</div>
+        <div class="service-desc">Convert leads into paying customers. Structured sales processes, consistent follow-ups, and retention frameworks that maximise revenue from every opportunity.</div>
+        <ul class="service-includes">
+          <li>Sales closing support</li>
+          <li>Lead qualification systems</li>
+          <li>Appointment setting</li>
+          <li>Customer retention frameworks</li>
+          <li>Sales analytics and reporting</li>
+        </ul>
+        <div class="service-pricing">Setup ₹1,50,000 · Monthly ₹50,000 · 5% performance</div>
+        <button class="service-benefit-btn" onclick="openModal('revenue')">How does this help me?</button>
+      </div>
+    </div>
+
+    <div class="services-grid-bottom" style="margin-top:2px;">
+      <!-- Package 4 -->
+      <div class="service-card reveal">
+        <div class="service-number">04</div>
+        <div class="service-name">Arkenmont Sovereign</div>
+        <div class="service-tagline">Complete Growth System</div>
+        <div class="service-desc">The complete growth infrastructure. Everything from Packages 1, 2 and 3 integrated with strategic consulting, legal support, and operational guidance.</div>
+        <ul class="service-includes">
+          <li>Full automation, marketing and sales</li>
+          <li>Strategic growth consulting</li>
+          <li>Legal support network access</li>
+          <li>Growth roadmap and funnel design</li>
+          <li>Complete operational guidance</li>
+        </ul>
+        <div class="service-pricing">Setup ₹4,00,000 · Monthly ₹1,80,000 · 5% performance</div>
+        <button class="service-benefit-btn" onclick="openModal('sovereign')">How does this help me?</button>
+      </div>
+
+      <!-- Package 5 -->
+      <div class="service-card reveal">
+        <div class="service-number">05</div>
+        <div class="service-name">Arkenmont Advisory</div>
+        <div class="service-tagline">Custom Growth Solutions</div>
+        <div class="service-desc">Not all businesses fit standard solutions. This package designs a fully custom system around your specific operational requirements and goals.</div>
+        <ul class="service-includes">
+          <li>Advanced automation workflows</li>
+          <li>Specialized CRM integrations</li>
+          <li>Custom marketing systems</li>
+          <li>Tailored sales processes</li>
+          <li>Bespoke growth infrastructure</li>
+        </ul>
+        <div class="service-pricing">Starting ₹80,000 · Custom pricing on scope</div>
+        <button class="service-benefit-btn" onclick="openModal('advisory')">How does this help me?</button>
+      </div>
+    </div>
+
+    <div class="services-enquiry reveal">
+      <p class="enquiry-text">Ready to begin?</p>
+      <p class="enquiry-sub">Tell us about your business and we will find the right path forward.</p>
+      <button class="btn-walnut" onclick="openEnquiry()">Send Enquiry</button>
+    </div>
+  </section>
+
+  <!-- Arkenmont Circle -->
+  <section id="circle">
+    <div class="circle-inner">
+      <p class="circle-label reveal">Exclusive Intelligence</p>
+      <h2 class="circle-title reveal">The <span>Arkenmont</span> Circle</h2>
+      <p class="circle-desc reveal">Join a select network of business leaders who receive monthly personalised market intelligence, exclusive insights, and the kind of attention that turns clients into partners.</p>
+
+      <form class="circle-form reveal" onsubmit="submitCircle(event)">
+        <div class="circle-field">
+          <label class="circle-label-field">Email Address <span class="required-badge">Required</span></label>
+          <input type="email" class="circle-input" placeholder="your@company.com" required/>
+        </div>
+        <div class="circle-field">
+          <label class="circle-label-field">Company Name <span class="required-badge">Required</span></label>
+          <input type="text" class="circle-input" placeholder="Your company" required/>
+        </div>
+        <div class="circle-field">
+          <label class="circle-label-field">Your Name <span class="required-badge">Required</span></label>
+          <input type="text" class="circle-input" placeholder="Your name" required/>
+        </div>
+        <div class="circle-field">
+          <label class="circle-label-field">Company Foundation Day <span class="optional-badge">Optional</span></label>
+          <input type="date" class="circle-input"/>
+        </div>
+        <div class="circle-field">
+          <label class="circle-label-field">Your Birthday <span class="optional-badge">Optional</span></label>
+          <input type="date" class="circle-input"/>
+        </div>
+        <div class="circle-field circle-form-full">
+          <label class="circle-label-field">Home / Office Address <span class="optional-badge">Optional — for gift delivery</span></label>
+          <input type="text" class="circle-input" placeholder="Your address"/>
+        </div>
+        <div class="circle-form-full circle-submit-wrap">
+          <button type="submit" class="btn-walnut">Join the Circle</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg class="footer-logo" viewBox="0 0 60 60" fill="none">
+          <polygon points="18,10 30,10 38,28 32,28" fill="rgba(245,245,240,0.7)"/>
+          <polygon points="42,10 30,10 22,28 28,28" fill="rgba(245,245,240,0.7)"/>
+          <rect x="20" y="32" width="20" height="1.5" fill="#7B4F2E" opacity="0.6"/>
+        </svg>
+        <span class="footer-name">ARKENMONT</span>
+      </div>
+      <div class="footer-tagline">Rise Without Limits.</div>
+      <div class="footer-right">
+        <p class="footer-email">hello@arkenmont.co</p>
+        <p class="footer-copy">© 2025 Arkenmont. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Benefits Modals -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modalContent">
+      <button class="modal-close" onclick="closeModalDirect()">×</button>
+      <p class="modal-label" id="modalLabel"></p>
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Enquiry Modal -->
+  <div class="modal-overlay" id="enquiryOverlay" onclick="closeEnquiry(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeEnquiryDirect()">×</button>
+      <p class="modal-label">Get In Touch</p>
+      <h3 class="modal-title">Send an Enquiry</h3>
+      <form class="enquiry-form" onsubmit="submitEnquiry(event)">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="Full name" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company Name</label>
+          <input type="text" class="form-input" placeholder="Your company" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="your@company.com" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Package of Interest</label>
+          <select class="form-select form-input" required>
+            <option value="" disabled selected>Select a package</option>
+            <option>Arkenmont Foundation</option>
+            <option>Arkenmont Expansion</option>
+            <option>Arkenmont Revenue</option>
+            <option>Arkenmont Sovereign</option>
+            <option>Arkenmont Advisory</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Message</label>
+          <textarea class="form-textarea form-input" placeholder="Tell us about your business and what you're looking to achieve..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Enquiry</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Chat Widget -->
+  <div class="chat-widget">
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <span class="chat-header-title">ARKENMONT</span>
+        <button class="chat-close" onclick="toggleChat()">×</button>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-message">Hello. How can Arkenmont assist you today?</div>
+      </div>
+      <div class="chat-options" id="chatOptions">
+        <button class="chat-option" onclick="chatReply('services')">What services do you offer?</button>
+        <button class="chat-option" onclick="chatReply('confused')">I don't know what I need</button>
+        <button class="chat-option" onclick="chatReply('pricing')">Tell me about pricing</button>
+        <button class="chat-option" onclick="chatReply('contact')">I want to speak to someone</button>
+      </div>
+    </div>
+    <div class="chat-bubble" onclick="toggleChat()">
+      <div class="chat-dot"></div>
+      Hello there
+    </div>
+  </div>
+
+  <script>
+    // ═══ CURSOR ═══
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.transform = `translate(${mx-4}px,${my-4}px)`; });
+    function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.transform = `translate(${rx-16}px,${ry-16}px)`; requestAnimationFrame(animRing); }
+    animRing();
+
+    // ═══ SIDE PANEL ═══
+    function togglePanel() {
+      const panel = document.getElementById('sidePanel');
+      const overlay = document.getElementById('overlay');
+      const ham = document.getElementById('hamburger');
+      panel.classList.toggle('open');
+      overlay.classList.toggle('active');
+      ham.classList.toggle('active');
+    }
+
+    function showContact() {
+      const cp = document.getElementById('contact-panel');
+      cp.style.display = cp.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // ═══ ARKENMONT ANIMATION ═══
+    const arkData = [
+      { letter: 'A', meaning: 'Ambition that transforms businesses into market leaders' },
+      { letter: 'R', meaning: 'Results that are measured, proven and undeniable' },
+      { letter: 'K', meaning: 'Knowledge that drives every strategy we build' },
+      { letter: 'E', meaning: 'Excellence that is non-negotiable at every level' },
+      { letter: 'N', meaning: 'Network that connects clients to opportunities others cannot access' },
+      { letter: 'M', meaning: 'Mastery of systems, strategy and execution' },
+      { letter: 'O', meaning: 'Optimization that compounds growth at every stage' },
+      { letter: 'N', meaning: 'Navigation through complexity toward clarity and scale' },
+      { letter: 'T', meaning: 'Trust that is earned through performance, not promises' }
+    ];
+
+    let arkIndex = 0;
+    const arkLetter = document.getElementById('arkLetter');
+    const arkMeaning = document.getElementById('arkMeaning');
+    const arkProgress = document.getElementById('arkProgress');
+
+    // Build dots
+    arkData.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'ark-dot' + (i === 0 ? ' active' : '');
+      dot.id = 'dot-' + i;
+      arkProgress.appendChild(dot);
+    });
+
+    function showArk(index) {
+      arkLetter.classList.remove('visible');
+      arkMeaning.classList.remove('visible');
+      setTimeout(() => {
+        arkLetter.textContent = arkData[index].letter;
+        arkMeaning.textContent = arkData[index].meaning;
+        arkLetter.classList.add('visible');
+        arkMeaning.classList.add('visible');
+        document.querySelectorAll('.ark-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === index);
+        });
+      }, 400);
+    }
+
+    showArk(0);
+    setInterval(() => {
+      arkIndex = (arkIndex + 1) % arkData.length;
+      showArk(arkIndex);
+    }, 3000);
+
+    // ═══ SCROLL REVEAL ═══
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // ═══ BENEFITS MODAL ═══
+    const benefits = {
+      foundation: {
+        label: 'Package 01 — Foundation',
+        title: 'How Arkenmont Foundation helps your business',
+        items: [
+          { service: 'DM Automation', desc: 'Every message, comment and inquiry is automatically captured and responded to — 24/7, without any manual effort from your team. You never miss a potential customer again.' },
+          { service: 'Lead Capture Systems', desc: 'All incoming leads are automatically organized into a structured database. You always know exactly who your prospects are and where they are in the buying journey.' },
+          { service: 'Customer Journey Automation', desc: 'Prospects are automatically nurtured from first contact to conversion through structured communication sequences. Your conversion rate improves without adding workload.' },
+          { service: 'CRM Integration', desc: 'Your customer data is always organized, accessible and actionable. No more lost contacts, missed follow-ups or disorganized prospect lists.' }
+        ]
+      },
+      expansion: {
+        label: 'Package 02 — Expansion',
+        title: 'How Arkenmont Expansion helps your business',
+        items: [
+          { service: 'Professional Ad Production', desc: 'You get high-quality advertising content produced through our nationwide studio network — without the overhead of building your own production infrastructure.' },
+          { service: 'Campaign Management', desc: 'Your advertising budget is deployed strategically across the right platforms, monitored continuously, and optimized for maximum return.' },
+          { service: 'Outdoor Advertising Access', desc: 'You gain access to billboard placements across cities through our established network — at negotiated rates, managed entirely by Arkenmont.' },
+          { service: 'Business Improvement Guidance', desc: 'Your team gains structured knowledge in customer psychology, negotiation and behaviour — turning every client interaction into an optimized opportunity.' }
+        ]
+      },
+      revenue: {
+        label: 'Package 03 — Revenue',
+        title: 'How Arkenmont Revenue helps your business',
+        items: [
+          { service: 'Sales Closing Support', desc: 'Our trained team communicates with your leads, handles objections professionally, and closes deals on your behalf. You only pay for results — on a success-based model.' },
+          { service: 'Lead Qualification', desc: 'We filter your pipeline so your team only speaks to serious, high-intent buyers. No more wasted time on dead-end conversations.' },
+          { service: 'Customer Retention Systems', desc: 'Repeat purchase frameworks, loyalty programmes and upsell structures mean every customer becomes a long-term revenue source — not just a one-time transaction.' },
+          { service: 'Sales Analytics', desc: 'You see exactly where revenue is being lost, what your conversion rates are, and where the opportunities for improvement are — with data, not guesswork.' }
+        ]
+      },
+      sovereign: {
+        label: 'Package 04 — Sovereign',
+        title: 'How Arkenmont Sovereign helps your business',
+        items: [
+          { service: 'Complete Integration', desc: 'Every system — automation, marketing, sales and strategy — works together as a single coordinated growth engine. No gaps, no disconnects, no missed opportunities.' },
+          { service: 'Strategic Consulting', desc: 'You have direct access to Arkenmont\'s strategic advisory at the highest level — growth roadmaps, offer positioning, funnel design and content strategy all aligned.' },
+          { service: 'Legal Support Network', desc: 'Your business gains access to professional legal guidance on contracts, compliance and documentation — protecting your interests at every stage of growth.' },
+          { service: 'Performance Partnership', desc: 'We are invested in your revenue growth through our 5% performance model. When you grow, we grow. Our interests are permanently aligned with yours.' }
+        ]
+      },
+      advisory: {
+        label: 'Package 05 — Advisory',
+        title: 'How Arkenmont Advisory helps your business',
+        items: [
+          { service: 'Custom Solutions', desc: 'Your business is unique. Arkenmont Advisory designs systems specifically around your operational requirements — not adapted from templates, but built from the ground up for you.' },
+          { service: 'Specialized Integration', desc: 'Whether you need advanced automation, specialized CRM systems or custom sales processes — if it is within our expertise, we build it precisely to your specifications.' },
+          { service: 'Direct Access', desc: 'Advisory clients work directly with Arkenmont\'s senior team. You receive the highest level of attention, responsiveness and strategic commitment available.' }
+        ]
+      }
+    };
+
+    function openModal(pkg) {
+      const data = benefits[pkg];
+      document.getElementById('modalLabel').textContent = data.label;
+      document.getElementById('modalTitle').textContent = data.title;
+      const body = document.getElementById('modalBody');
+      body.innerHTML = data.items.map(item => `
+        <div class="benefit-item">
+          <div class="benefit-service">${item.service}</div>
+          <div class="benefit-desc">${item.desc}</div>
+        </div>
+      `).join('');
+      document.getElementById('modalOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+    }
+
+    function closeModalDirect() {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ═══ ENQUIRY MODAL ═══
+    function openEnquiry() {
+      document.getElementById('enquiryOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeEnquiry(e) {
+      if (e.target === document.getElementById('enquiryOverlay')) closeEnquiryDirect();
+    }
+
+    function closeEnquiryDirect() {
+      document.getElementById('enquiryOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function submitEnquiry(e) {
+      e.preventDefault();
+      closeEnquiryDirect();
+      alert('Thank you for your enquiry. Arkenmont will be in touch shortly.');
+    }
+
+    // ═══ CIRCLE FORM ═══
+    function submitCircle(e) {
+      e.preventDefault();
+      alert('Welcome to the Arkenmont Circle. You will receive your first market intelligence report shortly.');
+      e.target.reset();
+    }
+
+    // ═══ CHAT WIDGET ═══
+    function toggleChat() {
+      const panel = document.getElementById('chatPanel');
+      panel.classList.toggle('open');
+    }
+
+    const chatResponses = {
+      services: {
+        msg: 'We offer five packages: Foundation (automation), Expansion (marketing), Revenue (sales), Sovereign (complete system) and Advisory (custom). Scroll up to explore each one in detail.',
+        options: [{ label: 'Tell me about pricing', key: 'pricing' }, { label: 'I want to speak to someone', key: 'contact' }]
+      },
+      confused: {
+        msg: 'No problem at all. Our team will personally guide you to the right solution. Reach out directly and we will take it from there.',
+        email: true,
+        options: [{ label: 'Start over', key: 'restart' }]
+      },
+      pricing: {
+        msg: 'Our packages start from ₹90,000 setup. Each package has a monthly retainer, and our Revenue and Sovereign packages include a performance-based component. For full pricing, explore our services section above.',
+        options: [{ label: 'I want to send an enquiry', key: 'enquiry' }, { label: 'I want to speak to someone', key: 'contact' }]
+      },
+      contact: {
+        msg: 'You can reach Arkenmont directly at hello@arkenmont.co — we would love to assist you.',
+        options: [{ label: 'Start over', key: 'restart' }]
+      },
+      enquiry: {
+        msg: 'Perfect. Click the Enquiry button in our services section and we will get back to you within 24 hours.',
+        options: [{ label: 'Start over', key: 'restart' }]
+      },
+      restart: {
+        msg: 'Hello again. How can Arkenmont assist you?',
+        options: null
+      }
+    };
+
+    const defaultOptions = [
+      { label: 'What services do you offer?', key: 'services' },
+      { label: 'I don\'t know what I need', key: 'confused' },
+      { label: 'Tell me about pricing', key: 'pricing' },
+      { label: 'I want to speak to someone', key: 'contact' }
+    ];
+
+    function chatReply(key) {
+      const resp = chatResponses[key];
+      const body = document.getElementById('chatBody');
+      const opts = document.getElementById('chatOptions');
+
+      const msg = document.createElement('div');
+      msg.className = 'chat-message';
+      msg.innerHTML = resp.msg;
+      if (resp.email) {
+        msg.innerHTML += '<br/><br/><strong style="color:#7B4F2E;">hello@arkenmont.co</strong><br/><em style="font-size:11px;color:#888;">We will personally help you find the right service.</em>';
+      }
+      body.appendChild(msg);
+      body.scrollTop = body.scrollHeight;
+
+      opts.innerHTML = '';
+      const nextOpts = resp.options || defaultOptions;
+      nextOpts.forEach(o => {
+        const btn = document.createElement('button');
+        btn.className = 'chat-option';
+        btn.textContent = o.label;
+        btn.onclick = () => chatReply(o.key);
+        opts.appendChild(btn);
+      });
+    }
+  </script>
+</body>
+</html>
